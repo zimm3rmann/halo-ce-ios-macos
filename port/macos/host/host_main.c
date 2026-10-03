@@ -170,6 +170,7 @@ int main(int argc, char **argv) {
     if (!stack)
         host_fatal("Cannot allocate main stack");
     mprotect(stack, HALO_MACOS_PAGE, PROT_NONE);
+    host_url_listen();
     host_logf(HOST_LOG_INFO, "Halo ARM64 starting: data %s; saves %s", data_root, save_root);
     macos_enter_guest_stack(stack + stack_size + HALO_MACOS_PAGE, boot);
 }

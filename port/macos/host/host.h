@@ -99,6 +99,12 @@ void host_debug_thread_exited(void);
 /* HALO_SAMPLE: seconds between samples of the guest threads, or NULL */
 void host_debug_start_sampler(const char *setting);
 
+/* ---------- halo:// links (host_url.c) */
+
+/* catches the Apple Event macOS sends for a halo:// link and leaves it in
+join_link.txt, which the guest already watches (p2p.c, poll_invite_file) */
+void host_url_listen(void);
+
 /* ---------- import table (host_imports.c) */
 
 /* the host function for an import name, or NULL */

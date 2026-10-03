@@ -62,6 +62,8 @@ def build_host():
     run("clang", *objects, f"-L{SDL / 'lib'}", "-lSDL3",
         *(f"-F{directory}" for directory in frameworks),
         "-framework", "libEGL", "-framework", "libGLESv2",
+        # host_url.c: the Apple Event for a halo:// link
+        "-framework", "ApplicationServices",
         *(f"-Wl,-rpath,{directory}" for directory in frameworks), "-o", BUILD / "halo")
 
 
@@ -115,6 +117,13 @@ def package(data_root):
         "CFBundleVersion": "1", "LSMinimumSystemVersion": "14.0",
         "NSHighResolutionCapable": True,
         "NSHumanReadableCopyright": "Local experimental Apple Silicon port",
+        # Darwin has no /proc, so posix_register_url_scheme (a .desktop writer)
+        # registers nothing: the bundle declares the scheme instead, and SDL
+        # delivers the link as SDL_EVENT_DROP_FILE.
+        "CFBundleURLTypes": [{
+            "CFBundleURLName": "Halo: Combat Evolved invite",
+            "CFBundleURLSchemes": ["halo"],
+        }],
     }
     with (contents / "Info.plist").open("wb") as stream:
         plistlib.dump(info, stream)
